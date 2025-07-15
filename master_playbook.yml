@@ -1,1 +1,16 @@
+---
+- name: Playbook maître - Configuration complète
+  hosts: all
+  become: yes
+  vars:
+    username: monuser
+    snmp_community: public
+    snmp_contact: admin@example.com
+    snmp_location: "Datacenter Rack 1"
+
+  tasks:
+    - import_playbook: create_user_sudo.yml
+    - import_playbook: enable_iptables.yml
+    - import_playbook: enable_minor_updates.yml
+    - import_playbook: configure_snmp.yml
 

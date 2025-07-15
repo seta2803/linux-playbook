@@ -1,1 +1,38 @@
+---
+- name: Activer et démarrer iptables
+  hosts: all
+  become: yes
+  tasks:
+    - name: Installer iptables (Debian/Ubuntu)
+      apt:
+        name: iptables
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Installer iptables-services (RedHat/CentOS)
+      yum:
+        name: iptables-services
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Activer iptables service (RedHat)
+      systemd:
+        name: iptables
+        enabled: yes
+        state: started
+      when: ansible_os_family == "RedHat"
+
+    - name: Activer et démarrer iptables-persistent (Debian)
+      apt:
+        name:
+          - iptables-persistent
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: S'assurer que iptables est actif (Debian)
+      systemd:
+        name: netfilter-persistent
+        enabled: yes
+        state: started
+      when: ansible_os_family == "Debian"
 

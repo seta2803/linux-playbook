@@ -1,0 +1,12 @@
+- name: Créer un utilisateur avec droits sudo
+  hosts: all
+  become: yes
+  vars:
+    username: admin
+  tasks:
+    - name: Créer l'utilisateur
+      user:
+        name: "{{ username }}"
+        shell: /bin/bash
+        state: present
+        create_home: yes

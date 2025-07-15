@@ -1,1 +1,50 @@
+---
+- name: Installer et configurer SNMP
+  hosts: all
+  become: yes
+  vars:
+    snmp_community: public
+    snmp_contact: admin@example.com
+    snmp_location: "Datacenter Rack 1"
+  tasks:
+    - name: Installer SNMP et utils (Debian)
+      apt:
+        name:
+          - snmpd
+          - snmp
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Installer SNMP et utils (RedHat)
+      yum:
+        name:
+          - net-snmp
+          - net-snmp-utils
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Sauvegarder le fichier de config SNMP
+      copy:
+        dest: /etc/snmp/snmpd.conf
+        content: |
+          com2sec readonly  default         {{ snmp_community }}
+          group MyROGroup v1         readonly
+          group MyROGroup v2c        readonly
+          view all    included   .1                               80
+          access MyROGroup ""      any       noauth    exact  all    none   none
+          syslocation {{ snmp_location }}
+          syscontact {{ snmp_contact }}
+      notify: restart snmpd
+
+    - name: Activer et démarrer le service SNMP
+      systemd:
+        name: snmpd
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart snmpd
+      systemd:
+        name: snmpd
+        state: restarted
 

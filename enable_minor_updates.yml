@@ -1,1 +1,32 @@
+---
+- name: Activer mises à jour mineures automatiques
+  hosts: all
+  become: yes
+  tasks:
+    - name: Activer mises à jour automatiques sur Ubuntu
+      apt:
+        name: unattended-upgrades
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Configurer unattended-upgrades sur Ubuntu
+      copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Unattended-Upgrade "1";
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Installer yum-cron sur RedHat
+      yum:
+        name: yum-cron
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Activer et démarrer yum-cron (RedHat)
+      systemd:
+        name: yum-cron
+        enabled: yes
+        state: started
+      when: ansible_os_family == "RedHat"
 

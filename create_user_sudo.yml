@@ -1,3 +1,4 @@
+---
 - name: Créer un utilisateur avec droits sudo
   hosts: all
   become: yes
@@ -10,3 +11,29 @@
         shell: /bin/bash
         state: present
         create_home: yes
+
+    - name: Installer sudo si nécessaire (Debian/Ubuntu)
+      apt:
+        name: sudo
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Installer sudo si nécessaire (RedHat/CentOS)
+      yum:
+        name: sudo
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ajouter l'utilisateur au groupe sudo (Debian) ou wheel (RedHat)
+      user:
+        name: "{{ username }}"
+        groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+        append: yes
+
+    - name: Autoriser l'utilisateur à utiliser sudo sans mot de passe
+      copy:
+        dest: "/etc/sudoers.d/{{ username }}"
+        content: "{{ username }} ALL=(ALL) NOPASSWD:ALL\n"
+        owner: root
+        group: root
+        mode: '0440'

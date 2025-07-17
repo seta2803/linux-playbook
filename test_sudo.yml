@@ -6,7 +6,8 @@
   tasks:
     - name: Qui suis-je ?
       command: whoami
-      register: result
+      become: yes
+      register: result_root
 
     - debug:
         var: result.stdout

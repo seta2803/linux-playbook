@@ -1,9 +1,4 @@
 ---
-- name: Vérifier les privilèges en cours
-  command: whoami
-  register: whoami_result
-  become: yes
-
 - debug:
     var: whoami_result.stdout
 
@@ -12,7 +7,13 @@
   become: yes
   vars:
     username: admin
+    
   tasks:
+    - name: Vérifier les privilèges en cours
+    command: whoami
+    register: whoami_result
+    become: yes
+  
     - name: Créer l'utilisateur
       user:
         name: "{{ username }}"

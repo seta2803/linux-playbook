@@ -7,9 +7,9 @@
     
   tasks:
     - name: Vérifier les privilèges en cours
-    command: whoami
-    register: whoami_result
-    become: yes
+      command: whoami
+      register: whoami_result
+      become: yes
     - debug:
         var: whoami_result.stdout
   

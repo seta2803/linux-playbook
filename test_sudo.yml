@@ -1,0 +1,12 @@
+---
+- name: Test sudo
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Qui suis-je ?
+      command: whoami
+      register: result
+
+    - debug:
+        var: result.stdout

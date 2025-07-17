@@ -1,7 +1,4 @@
 ---
-- debug:
-    var: whoami_result.stdout
-
 - name: Créer un utilisateur avec droits sudo
   hosts: all
   become: yes
@@ -13,6 +10,8 @@
     command: whoami
     register: whoami_result
     become: yes
+    - debug:
+        var: whoami_result.stdout
   
     - name: Créer l'utilisateur
       user:

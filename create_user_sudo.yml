@@ -2,6 +2,7 @@
 - name: Créer un utilisateur avec droits sudo
   hosts: all
   become: yes
+  become_method: sudo
   vars:
     username: admin
     

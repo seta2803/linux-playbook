@@ -10,4 +10,4 @@
       register: result_root
 
     - debug:
-        var: result.stdout
+        var: result_root.stdout

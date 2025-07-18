@@ -3,17 +3,28 @@
   hosts: all
   become: yes
   become_method: sudo
+  environment:
+    PATH: "/sbin:/bin:/usr/sbin:/usr/bin"
   vars:
     username: admin
-    
+
   tasks:
-    - name: Vérifier les privilèges en cours
+    - name: Vérifier les privilèges en cours (whoami)
       command: whoami
       register: whoami_result
-      become: yes
-    - debug:
+
+    - name: Afficher le résultat de whoami
+      debug:
         var: whoami_result.stdout
-  
+
+    - name: Afficher le PATH effectif
+      command: echo $PATH
+      register: path_result
+
+    - name: Afficher le résultat du PATH
+      debug:
+        var: path_result.stdout
+
     - name: Créer l'utilisateur
       user:
         name: "{{ username }}"
@@ -27,7 +38,7 @@
         state: present
       when: ansible_os_family == "Debian"
 
-    - name: Installer sudo si nécessaire (RedHat/CentOS)
+    - name: Installer sudo si nécessaire (RedHat/CentOS/Rocky)
       yum:
         name: sudo
         state: present

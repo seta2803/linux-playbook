@@ -1,0 +1,28 @@
+---
+- name: Test des privilèges sudo avec Ansible
+  hosts: all
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Affiche l'utilisateur courant (doit être root)
+      command: whoami
+      register: result_whoami
+      environment:
+        PATH: "/sbin:/bin:/usr/sbin:/usr/bin"
+
+    - name: Affiche le résultat de whoami
+      debug:
+        msg: "Résultat whoami : {{ result_whoami.stdout }}"
+
+    - name: Test sudo direct - création fictive (dry-run)
+      command: /sbin/useradd --help
+      environment:
+        PATH: "/sbin:/bin:/usr/sbin:/usr/bin"
+      register: result_useradd
+      ignore_errors: yes
+
+    - name: Résultat du test sudo useradd
+      debug:
+        var: result_useradd

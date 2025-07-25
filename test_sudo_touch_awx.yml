@@ -1,0 +1,21 @@
+---
+- name: Test des privilèges sudo - Création d'un fichier dans /root
+  hosts: all
+  become: yes
+  tasks:
+    - name: Créer un fichier dans /root
+      file:
+        path: /root/fichier_test_sudo_awx
+        state: touch
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Vérifier la présence du fichier
+      stat:
+        path: /root/fichier_test_sudo_awx
+      register: resultat
+
+    - name: Afficher le résultat
+      debug:
+        var: resultat.stat.exists

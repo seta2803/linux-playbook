@@ -4,7 +4,7 @@
   environment:
     PATH: "/sbin:/bin:/usr/sbin:/usr/bin"
   vars:
-    username: admin
+    username: administrator
 
   tasks:
     - name: Vérifier les privilèges en cours (whoami)

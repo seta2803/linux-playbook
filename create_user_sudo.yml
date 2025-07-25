@@ -1,8 +1,6 @@
 ---
 - name: Créer un utilisateur avec droits sudo
   hosts: all
-  become: yes
-  become_method: sudo
   environment:
     PATH: "/sbin:/bin:/usr/sbin:/usr/bin"
   vars:

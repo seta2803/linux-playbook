@@ -1,7 +1,9 @@
 ---
 - name: Test des privilèges sudo - Création d'un fichier dans /root
   hosts: all
-  become: true
+  become: yes
+  become_method: sudo
+  become_user: root
   tasks:
     - name: Créer un fichier dans /root
       file:
